@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>所有逾期记录</h2>
+
+{% if overdues %}
+<table border="1" >
+    <thead>
+        <tr>
+            <th>学号</th>
+            <th>学生姓名</th>
+            <th>图书号</th>
+            <th>书名</th>
+            <th>借阅日期</th>
+            <th>应还日期</th>
+            <th>逾期天数</th>
+            <th>应缴费用(元)</th>  
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in overdues %}
+        <tr>
+            <td>{{ o.sno }}</a>
+            <td>{{ o.sname }}</a>
+            <td>{{ o.bid }}</a>
+            <td>{{ o.bname }}</a>
+            <td>{{ o.borrow_date }}</a>
+            <td>{{ o.due_date }}</a>
+            <td>{{ o.overdue_days }}天</a>
+            <td>{{ "%.2f"|format(o.fine_amount) }}元</a>  
+            <td>
+                {% if o.is_paid %}
+                    <span style="color: green;">已处理</span>
+                {% else %}
+                    <span style="color: red;">未处理</span>
+                {% endif %}
+            </a>
+            <td>
+                {% if not o.is_paid %}
+                    <a href="/overdue/pay/{{ o.overdue_id }}">支付罚款</a>
+                {% endif %}
+                <a href="/overdue/delete/{{ o.overdue_id }}" onclick="return confirm('确定删除？')">删除</a>
+            </a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div >
+    <strong>统计信息：</strong>
+    总逾期记录：{{ overdues|length }} 条，
+    未处理：{{ overdues|selectattr('is_paid', 'equalto', False)|list|length }} 条，
+    已处理：{{ overdues|selectattr('is_paid', 'equalto', True)|list|length }} 条，
+    <strong>未处理总罚款：{{ "%.2f"|format(overdues|selectattr('is_paid', 'equalto', False)|sum(attribute='fine_amount')) }}元</strong>
+</div>
+
+{% else %}
+    <p>暂无逾期记录</p>
+{% endif %}
+
+{% endblock %}

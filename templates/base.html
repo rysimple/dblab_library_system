@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>图书馆管理系统</title>
+    <style>
+        .header { background: #174d83; color: white; padding: 12px 100px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header a { color: white; margin-left: 40px; }
+        .header .user-info { float: right; }
+        th { background: #174d83; color: white; }
+        button { background: #174d83; color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .success { background: #d4edda; color: green; }
+        .error { background: #f8d7da; color: brown; }
+        input, select, button { padding: 6px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if session.user_type == 'student' %}
+            <a href="/student">首页</a>
+            <a href="/books">图书查询</a>
+            <a href="/borrow">借书</a>
+            <a href="/return">还书</a>
+            <a href="/reserve">预约</a>
+            <a href="/student_overdue">违约信息</a>
+            <a href="/student_records">借阅记录</a>
+            <span class="user-info">欢迎, {{ session.sname }} | <a href="/logout">退出</a></span>
+        {% elif session.user_type == 'admin' %}
+            <a href="/admin">首页</a>
+            <a href="/books">图书查询</a>
+            <a href="/students">学生信息</a>
+            <a href="/admins">管理员信息</a>
+            <a href="/admin_reserves">预约信息</a>
+            <a href="/records">借阅记录</a>
+            <a href="/overdue">违约信息</a>
+            <span class="user-info">欢迎, 管理员 {{ session.admin_name }} | <a href="/logout">退出</a></span>
+        {% else %}
+            <a href="/login">登录</a>
+        {% endif %}
+    </div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

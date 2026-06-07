@@ -1,0 +1,110 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>学生信息</h2>
+{% if msg %}
+    <div class="msg {{ 'success' if success else 'error' }}">
+        {{ msg }}
+    </div>
+{% endif %}
+<p><a href="#" onclick="openAddModal(); return false;">+ 添加学生</a></p>
+<table border="1">
+    <thead>
+        <tr><th>头像</th><th>学号</th><th>姓名</th><th>班级</th><th>电话</th><th>邮箱</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+        
+        {% for s in students %}
+        <tr>
+            <td>
+                {% if s.photo %}
+                    <img src="/{{ s.photo }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                    <span style="color: gray;">无</span>
+                {% endif %}
+            </td>
+            <td>{{ s.sno }}</a>
+            <td>{{ s.sname }}</a>
+            <td>{{ s.sclass or '-' }}</a>
+            <td>{{ s.sphone or '-' }}</a>
+            <td>{{ s.semail or '-' }}</a>
+            <td>
+                <a href="#" onclick="openEditModal('{{ s.sno }}', '{{ s.sname }}', '{{ s.sclass or '' }}', '{{ s.sphone or '' }}', '{{ s.semail or '' }}'); return false;">编辑</a>
+                |
+                <a href="/student/delete/{{ s.sno }}" onclick="return confirm('确定删除？')">删除</a>
+            </a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="editModal" style="display: none;">
+    <div>
+        <span onclick="closeModal()">&times;</span>
+        <h3>编辑学生</h3>
+        <form id="editForm" method="POST">
+            <input type="hidden" name="sno" id="edit_sno">
+            <label>姓名：</label>
+            <input type="text" name="sname" id="edit_sname" required>
+            <label>班级：</label>
+            <input type="text" name="sclass" id="edit_sclass">
+            <label>电话：</label>
+            <input type="text" name="sphone" id="edit_sphone">
+            <label>邮箱：</label>
+            <input type="email" name="semail" id="edit_semail">
+            <label>新密码：</label>
+            <input type="password" name="new_password" placeholder="留空则不修改">
+            <button type="submit">保存</button>
+            <button type="button" onclick="closeModal()">取消</button>
+        </form>
+    </div>
+</div>
+<div id="addModal" style="display: none;">
+    <div>
+        <span onclick="close_addModal()">&times;</span>
+        <h3>添加学生</h3>
+        <form id="addForm" method="POST" action="/student/add">
+            <label>学号：</label>
+            <input type="text" name="sno" required>
+            <label>姓名：</label>
+            <input type="text" name="sname" required>
+            <label>密码：</label>
+            <input type="password" name="new_password" required>
+            <label>班级：</label>
+            <input type="text" name="sclass">
+            <label>电话：</label>
+            <input type="text" name="sphone">
+            <label>邮箱：</label>
+            <input type="email" name="semail">
+            <label>头像地址：</label>
+            <input type="text" name="photo">
+            <button type="submit">保存</button>
+            <button type="button" onclick="close_addModal()">取消</button>
+        </form>
+    </div>
+</div>
+
+<script>    
+    function openEditModal(sno, sname, sclass, sphone, semail) {
+        document.getElementById('edit_sno').value = sno;
+        document.getElementById('edit_sname').value = sname;
+        document.getElementById('edit_sclass').value = sclass;
+        document.getElementById('edit_sphone').value = sphone;
+        document.getElementById('edit_semail').value = semail;
+        document.getElementById('editForm').action = '/student/edit/' + sno;
+        document.getElementById('editModal').style.display = 'block';
+    }
+    function openAddModal(sno, sname, sclass, sphone, semail) {
+        document.getElementById('addForm').action = '/student/add';
+        document.getElementById('addModal').style.display = 'block';
+    }
+    
+    function closeModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+    function close_addModal() {
+        document.getElementById('addModal').style.display = 'none';
+    }
+</script>
+{% endblock %}

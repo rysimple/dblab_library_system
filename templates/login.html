@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>登录</h2>
+
+{% if error %}
+    <div><strong>{{ error }}</strong></div>
+{% endif %}
+
+<div>
+    <button type="button" onclick="selectRole('student')">学生登录</button>
+    <button type="button" onclick="selectRole('admin')">管理员登录</button>
+</div>
+
+<div id="studentForm" style="display:none;">
+    <h3>学生登录</h3>
+    <form method="POST">
+        <input type="hidden" name="user_type" value="student">
+        <input type="text" name="sno" placeholder="学号" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <button type="submit">登录</button>
+    </form>
+</div>
+
+<div id="adminForm" style="display:none;">
+    <h3>管理员登录</h3>
+    <form method="POST">
+        <input type="hidden" name="user_type" value="admin">
+        <input type="text" name="ano" placeholder="工号" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <button type="submit">登录</button>
+    </form>
+</div>
+
+<script>
+    function selectRole(role) {
+        document.getElementById('studentForm').style.display = role === 'student' ? 'block' : 'none';
+        document.getElementById('adminForm').style.display = role === 'admin' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

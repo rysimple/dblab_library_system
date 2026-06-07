@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>预定图书</h2>
+<p>当前学生：{{ session.sname }}</p>
+
+{% if msg %}
+    <div class="msg {{ 'success' if success else 'error' }}">
+        {{ msg }}
+    </div>
+{% endif %}
+
+<form method="GET" action="{{ url_for('reserve') }}">
+    <input type="text" name="search" placeholder="输入书名搜索..." value="{{ request.args.get('search', '') }}">
+    <button>搜索</button>
+    {% if request.args.get('search') %}<a href="{{ url_for('reserve') }}">全部</a>{% endif %}
+</form>
+
+<form method="POST">
+    <select name="bid">
+        <option value="">-- 请选择图书 --</option>
+        {% for book in books %}
+        <option value="{{ book.bid }}">
+            {{ book.bid }} - {{ book.bname }}
+        </option>
+        {% endfor %}
+    </select>
+    <button type="submit">确认预定</button>
+</form>
+
+<h3>图书列表</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>封面</th><th>图书号</th><th>书名</th><th>作者</th>
+            <th>总本数</th><th>剩余本数</th><th>状态</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>
+                {% if book.cover %}
+                    <img src="/{{ book.cover }}" style="width: 40px; height: 55px; object-fit: cover;">
+                {% else %}
+                    <span style="color: gray;">无</span>
+                {% endif %}
+            </td>
+            <td>{{ book.bid }}</a>
+            <td>{{ book.bname }}</a>
+            <td>{{ book.author or '-' }}</a>
+            <td>{{ book.total_count }}</a>
+            <td>{{ book.available_count }}</a>
+            <td>
+                {% if book.available_count <= 0 %}
+                    <span style="color: red;">已借完</span>
+                {% elif book.reserve_Times > 0 %}
+                    <span style="color: orange;">已预约</span>
+                {% else %}
+                    <span style="color: green;">可借</span>
+                {% endif %}
+            </a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>我的预定</h3>
+{% if reserves %}
+<table border="1">
+    <thead>
+        <tr>
+            <th>图书号</th><th>书名</th><th>预定日期</th>
+            <th>取书日期</th><th>状态</th><th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in reserves %}
+        <tr>
+            <td>{{ r.bid }}</a>
+            <td>{{ r.bname }}</a>
+            <td>{{ r.reserve_date }}</a>
+            <td>{{ r.take_date or '-' }}</a>
+            <td>
+                {% if r.status == '已取书' %}
+                    <span style="color: gray;">已取书</span>
+                {% elif r.status == '已过期' %}
+                    <span style="color: red;">已过期</span>
+                {% else %}
+                    <span style="color: green;">有效</span>
+                {% endif %}
+            </a>
+            <td>
+                {% if r.status == '有效' %}
+                    <a href="/reserve/cancel/{{ r.reserve_id }}">取消</a>
+                {% else %}
+                    <span style="color: gray;">不可取消</span>
+                {% endif %}
+            </a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>暂无预定记录</p>
+{% endif %}
+{% endblock %}

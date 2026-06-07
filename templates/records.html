@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>所有借阅记录</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>学号</th><th>学生姓名</th><th>图书号</th><th>书名</th>
+            <th>借阅日期</th><th>应还日期</th><th>还书日期</th><th>状态</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in borrows %}
+        <tr>
+            <td>{{ b.sno }}</td>
+            <td>{{ b.sname }}</td>
+            <td>{{ b.bid }}</td>
+            <td>{{ b.bname }}</td>
+            <td>{{ b.borrow_date }}</td>
+            <td>{{ b.due_date }}</td>
+            <td>{{ b.return_date or '-' }}</td>
+            <td>{{ b.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

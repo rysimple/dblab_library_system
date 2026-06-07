@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>学生首页</h2>
+
+<p>欢迎，{{ session.sname }} ({{ session.sno }})</p>
+<p>当前借阅：{{ borrow_count }} 本（上限3本）</p>
+<p>逾期记录：{{ overdue_count }} 条</p>
+
+<p>
+    <a href="/student/delete_photo">删除头像</a> |
+    <a href="#" onclick="openPasswordModal(); return false;">修改密码</a>
+</p>
+
+{% if msg %}
+    <div class="msg {{ 'success' if success else 'error' }}">
+        {{ msg }}
+    </div>
+{% endif %}
+
+<div id="passwordModal" style="display:none;">
+    <form method="POST" action="/student/change_password">
+        <input type="password" name="old_password" placeholder="原密码" required>
+        <input type="password" name="new_password" placeholder="新密码" required>
+        <input type="password" name="confirm_password" placeholder="确认新密码" required>
+        <button type="submit">确认修改</button>
+        <button type="button" onclick="closeModal()">取消</button>
+    </form>
+</div>
+
+<form method="POST" action="/student/upload_photo" enctype="multipart/form-data">
+    <input type="file" name="photo" accept="image/*" onchange="this.form.submit()">
+</form>
+
+{% if student_photo %}
+    <p>当前头像：</p>
+    <img src="/{{ student_photo }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+{% endif %}
+
+<h3>系统功能</h3>
+<ul>
+    <li><a href="/books">图书信息查询</a></li>
+    <li><a href="/borrow">借书</a></li>
+    <li><a href="/return">还书</a></li>
+    <li><a href="/reserve">预约图书</a></li>
+    <li><a href="/student_overdue">逾期信息查询</a></li>
+    <li><a href="/student_records">借阅记录查询</a></li>
+</ul>
+
+<script>
+    function openPasswordModal() {
+        document.getElementById('passwordModal').style.display = 'block';
+    }
+    function closeModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+    }
+</script>
+{% endblock %}

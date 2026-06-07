@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>管理员信息</h2>
+
+<table>
+    <thead><tr><th>工号</th><th>姓名</th><th>电话</th></tr></thead>
+    <tbody>
+        {% for a in admins %}
+        <tr><td>{{ a.ano }}</td><td>{{ a.aname }}</td><td>{{ a.aphone or '-' }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

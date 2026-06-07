@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>图书信息</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>封面</th><th>图书号</th><th>书名</th><th>作者</th><th>出版社</th><th>价格</th>
+            <th>总本数</th><th>剩余本数</th><th>状态</th><th>借阅次数</th><th>预约人数</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>
+                {% if book.cover %}
+                    <img src="/{{ book.cover }}" style="width: 60px; height: 80px; object-fit: cover;">
+                {% else %}
+                    <span style="color: gray;">无封面</span>
+                {% endif %}
+            </td>
+            <td>{{ book.bid }}</a>
+            <td>{{ book.bname }}</a>
+            <td>{{ book.author or '-' }}</a>
+            <td>{{ book.publisher or '-' }}</a>
+            <td>{{ book.price or '-' }}元</a>
+            <td>{{ book.total_count }}</a>
+            <td>{{ book.available_count }}</a>
+            <td>
+                {% if book.available_count <= 0 %}
+                    <span style="color: gray;">已借完</span>
+                {% elif book.reserve_Times > 0 %}
+                    <span style="color: orange;">已预约</span>
+                {% else %}
+                    <span style="color: green;">可借</span>
+                {% endif %}
+            </a>
+            <td>{{ book.borrow_Times }}</a>
+            <td>{{ book.reserve_Times }}</a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

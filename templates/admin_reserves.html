@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>所有预约信息</h2>
+
+{% if reserves %}
+<table border="1">
+    <thead>
+        <tr>
+            <th>预约编号</th><th>学号</th><th>学生姓名</th><th>图书号</th><th>书名</th>
+            <th>作者</th><th>预约日期</th><th>取书日期</th><th>状态</th><th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in reserves %}
+        <tr>
+            <td>{{ r.reserve_id }}</a>
+            <td>{{ r.sno }}</a>
+            <td>{{ r.sname }}</a>
+            <td>{{ r.bid }}</a>
+            <td>{{ r.bname }}</a>
+            <td>{{ r.author or '-' }}</a>
+            <td>{{ r.reserve_date }}</a>
+            <td>{{ r.take_date or '-' }}</a>
+            <td>
+                {% if r.take_date %}
+                    已取书
+                {% else %}
+                   <span style="color: green;">有效</span>
+                {% endif %}
+            </a>
+            <td>
+                <a href="/admin/reserve/delete/{{ r.reserve_id }}" onclick="return confirm('确定要删除这条预约吗？')">删除</a>
+            </a>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+    <p>暂无预约记录</p>
+{% endif %}
+
+{% endblock %}

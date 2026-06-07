@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>还书</h2>
+<p>当前学生：{{ session.sname }}</p>
+
+<!-- 显示借书结果消息 -->
+{% if msg %}
+    <div class="msg {{ 'success' if success else 'error' }}">
+        {{ msg }}
+    </div>
+{% endif %}
+
+{% if borrows %}
+<form method="POST">
+    <select name="bid">
+        <option value="">-- 请选择要归还的图书 --</option>
+        {% for b in borrows %}
+        <option value="{{ b.bid }}">{{ b.bname }} (借于: {{ b.borrow_date }})</option>
+        {% endfor %}
+    </select>
+    <button type="submit">确认还书</button>
+</form>
+{% else %}
+<p>当前没有未还的图书</p>
+{% endif %}
+{% endblock %}
