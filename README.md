@@ -1,4 +1,4 @@
-现在mysql里运行`database/init.sql`
+先在mysql里运行`database/init.sql`
 
 再运行 `python app.py `
 
